@@ -1,0 +1,13 @@
+/* AboutUsPage.css */
+
+.fade-in {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 1.5s ease-in, transform 1.5s ease-in;
+}
+
+.fade-out {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 1.5s ease-out, transform 1.5s ease-out;
+}
