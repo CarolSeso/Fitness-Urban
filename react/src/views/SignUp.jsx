@@ -81,15 +81,16 @@ export default function SignUp() {
               type={passwordButton ? "text" : "password"}
               placeholder="parolă"
             />
-            {
-              passwordButton ?
-              <button>
-                <BiSolidShow onClick={changePasswordButton} className="absolute w-5 h-5 top-4 right-4 text-neutral-400"/>
-              </button>
-              :
-              <button>
-                <BiSolidHide onClick={changePasswordButton} className="absolute w-5 h-5 top-4 right-4 text-neutral-400"/>
-              </button>
+           {
+            passwordButton ? (
+                <button onClick={(e) => { e.preventDefault(); changePasswordButton(); }}>
+                <BiSolidShow className="absolute w-5 h-5 top-4 right-4 text-neutral-400" />
+                </button>
+            ) : (
+                <button onClick={(e) => { e.preventDefault(); changePasswordButton(); }}>
+                <BiSolidHide className="absolute w-5 h-5 top-4 right-4 text-neutral-400" />
+                </button>
+            )
             }
           </div>
           <br />

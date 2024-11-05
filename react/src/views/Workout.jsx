@@ -5,6 +5,7 @@ import personale from "../components/personale.js";
 import Personalizate from "../components/Personalizate.jsx";
 import AdaugaAntrenament from "../components/AdaugaAntrenament.jsx";
 
+
 export default function WorkoutPage() {
   const [wkName, setWkName] = useState(null);
   const [nou, setNou] = useState(false);
