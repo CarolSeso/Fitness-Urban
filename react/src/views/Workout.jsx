@@ -101,9 +101,9 @@ const deleteAntrenament = async (id) => {
           <br />
           {antrenamente.map((element) => (
             <div key={element.id} className="mb-6">
-              <Propuse antrenament={element} />
+                <Propuse antrenament={element} />
             </div>
-          ))}
+            ))}
           <br /><br /><br />
           <hr />
           <br /><br /><br />

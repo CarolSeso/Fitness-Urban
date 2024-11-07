@@ -42,15 +42,20 @@ class AuthController extends Controller
     }
 
     public function logout(Request $request)
-{
-    /** @var \App\Models\User $user */
-    $user = $request->user();
+    {
+        /** @var \App\Models\User $user */
+        $user = $request->user();
 
-    if ($user) {
-        $user->tokens()->where('id', $user->currentAccessToken()->id)->delete();
-        return response('', 204);
+        if ($user) {
+
+            response('', 204)->send();
+
+
+            $user->tokens()->where('id', $user->currentAccessToken()->id)->delete();
+
+            exit;
+        }
+
+        return response(['message' => 'No authenticated user found'], 401);
     }
-
-    return response(['message' => 'No authenticated user found'], 401);
-}
 }
