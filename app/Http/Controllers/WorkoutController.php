@@ -16,9 +16,7 @@ class WorkoutController extends Controller
     public function personalWorkouts()
     {
         $user = Auth::user();
-        if (!$user) {
-            return response()->json(['message' => 'Unauthorized'], 401);
-        }
+
         return Workout::where('user_id', $user->id)->with('exercises')->get();
     }
 

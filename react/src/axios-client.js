@@ -5,20 +5,28 @@ const axiosClient = axios.create({
 })
 
 axiosClient.interceptors.request.use((config) => {
-    const token = localStorage.getItem('ACCESS_TOKEN')
-    config.headers.Authorization = `Bearer ${token}`
+    const token = localStorage.getItem('ACCESS_TOKEN');
+    config.headers.Authorization = `Bearer ${token}`;
     return config;
-})
+});
 
-axiosClient.interceptors.response.use((response) => {
-    return response;
-}, (error) => {
-    const {response} = error;
-    if (response.status === 401) {
-        localStorage.removeItem('ACCESS_TOKEN')
+axiosClient.interceptors.response.use(
+    (response) => {
+        return response;
+    },
+    (error) => {
+        const { response } = error;
+        if (response.status === 401) {
+            localStorage.removeItem('ACCESS_TOKEN');
+        }
+        throw error;
     }
+);
 
-    throw error;
-})
+// Workouts endpoints
+export const fetchProposedWorkouts = () => axiosClient.get('/proposed-workouts');
+export const fetchPersonalWorkouts = () => axiosClient.get('/personal-workouts');
+export const createPersonalWorkout = (workout) => axiosClient.post('/personal-workouts', workout);
+export const deletePersonalWorkout = (id) => axiosClient.delete(`/personal-workouts/${id}`);
 
 export default axiosClient;

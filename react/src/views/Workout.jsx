@@ -1,47 +1,89 @@
-import React, { useState } from "react";
-import antrenamente from "../components/antrenamente.js";
+import React, { useState, useEffect } from "react";
 import Propuse from "../components/Prop.jsx";
-import personale from "../components/personale.js";
 import Personalizate from "../components/Personalizate.jsx";
 import AdaugaAntrenament from "../components/AdaugaAntrenament.jsx";
-
+import {
+    fetchProposedWorkouts,
+    fetchPersonalWorkouts,
+    createPersonalWorkout,
+    deletePersonalWorkout,
+} from '../axios-client.js';
 
 export default function WorkoutPage() {
-  const [wkName, setWkName] = useState(null);
+  const [wkName, setWkName] = useState("");
   const [nou, setNou] = useState(false);
   const [exList, setExList] = useState([]);
-  const [antrenamentNou, setAntrenamentNou] = useState(personale);
+  const [antrenamente, setAntrenamente] = useState([]);
+  const [antrenamentNou, setAntrenamentNou] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  function changeWkName(e) {
+  useEffect(() => {
+    fetchWorkouts();
+  }, []);
+
+  const fetchWorkouts = async () => {
+    try {
+        setIsLoading(true);
+        const [proposedResponse, personalResponse] = await Promise.all([
+            fetchProposedWorkouts(),
+            fetchPersonalWorkouts(),
+        ]);
+        setAntrenamente(proposedResponse.data);
+        setAntrenamentNou(personalResponse.data);
+        setError(null);
+    } catch (error) {
+        console.error('Error fetching workouts:', error);
+        setError('Failed to fetch workouts. Please try again later.');
+    } finally {
+        setIsLoading(false);
+    }
+};
+
+  const changeWkName = (e) => {
     setWkName(e.target.value);
-  }
+  };
 
-  function updateAntrenament(el) {
-    const updatedAntrenamentNou = [...antrenamentNou, el];
-    setAntrenamentNou(updatedAntrenamentNou);
-    setNou(false);
-  }
+  const updateAntrenament = async (el) => {
+    try {
+        const response = await createPersonalWorkout(el);
+        setAntrenamentNou([...antrenamentNou, response.data]);
+        setNou(false);
+    } catch (error) {
+        console.error('Error adding workout:', error);
 
-  function deleteAntrenament(id) {
-    const updatedAntrenamentNou = antrenamentNou.filter(
-      (element) => element.id !== id
-    );
-    setAntrenamentNou(updatedAntrenamentNou);
-  }
+    }
+};
 
-  function changeNou() {
+const deleteAntrenament = async (id) => {
+    try {
+        await deletePersonalWorkout(id);
+        const updatedAntrenamentNou = antrenamentNou.filter(
+            (element) => element.id !== id
+        );
+        setAntrenamentNou(updatedAntrenamentNou);
+    } catch (error) {
+        console.error('Error deleting workout:', error);
+
+    }
+};
+
+  const changeNou = () => {
     setExList([]);
     setNou(!nou);
-  }
+  };
 
-  function updateList(ex) {
+  const updateList = (ex) => {
     setExList([...exList, ex]);
-  }
+  };
 
-  function deleteEx(exId) {
+  const deleteEx = (exId) => {
     const newList = exList.filter((element) => element !== exId);
     setExList(newList);
-  }
+  };
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>{error}</div>;
 
   return (
     <div>
@@ -57,8 +99,8 @@ export default function WorkoutPage() {
           <br />
           <h1 className="text-5xl text-white">Antrenamente propuse:</h1>
           <br />
-          {antrenamente.map((element, index) => (
-            <div key={index} className="mb-6">
+          {antrenamente.map((element) => (
+            <div key={element.id} className="mb-6">
               <Propuse antrenament={element} />
             </div>
           ))}
@@ -77,9 +119,8 @@ export default function WorkoutPage() {
             </h1>
           ) : (
             antrenamentNou.map((element) => (
-              <div>
+              <div key={element.id}>
                 <Personalizate
-                  key={element.id}
                   antrenament={element}
                   deleteAntrenament={deleteAntrenament}
                   antrenamentNou={antrenamentNou}
@@ -91,8 +132,6 @@ export default function WorkoutPage() {
           {nou ? (
             <div>
               <AdaugaAntrenament
-                key={antrenamentNou.length}
-                id={antrenamentNou.length}
                 exList={exList}
                 setExList={setExList}
                 nou={nou}
