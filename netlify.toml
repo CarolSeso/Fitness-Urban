@@ -1,0 +1,9 @@
+[build]
+  command = "composer install && npm run build"
+  publish = "dist"
+
+[context.production.environment]
+  PHP_VERSION = "8.2"
+
+[context.deploy-preview.environment]
+  PHP_VERSION = "8.2"
