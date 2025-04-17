@@ -23,7 +23,7 @@ function About() {
       <div className="flex-col flex-grow mt-40 md:mx-16 mx-7 lg:grid-cols-2 lg:grid bg-zinc-950 rounded-3xl">
         <div className="w-full h-auto p-10">
           <h1 ref={ref1} className={`xl:text-6xl md:text-4xl text-3xl font-semibold text-white ${inView1 ? 'fade-in' : 'fade-out'}`}>
-            Ce este Fitenss Urban?
+            Ce este Fitness Urban?
           </h1>
           <br /><br />
           <span ref={ref2} className={`w-56 space-y-5 md:text-xl text-lg text-white ${inView2 ? 'fade-in' : 'fade-out'}`}>
